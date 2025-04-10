@@ -44,6 +44,7 @@ INSTALLED_APPS = [
 
     #3rd party apps
     'crispy_forms',
+    'crispy_bootstrap4',
 ]
 
 MIDDLEWARE = [
@@ -135,3 +136,6 @@ MEDIA_ROOT = BASE_DIR / 'a4' / 'media'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+
