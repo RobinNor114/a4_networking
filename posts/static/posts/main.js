@@ -10,6 +10,8 @@ const body =  document.getElementById('id_body')
 const csrf =  document.getElementsByName('csrfmiddlewaretoken')
 const alertBox =  document.getElementById('alert-box')
 
+const url = window.location.href
+
 console.log('csrf', csrf[0].value)
 
 const getCookie =(name) => {
@@ -76,7 +78,7 @@ const getData = () => {
                         <div class="card-footer">
                             <div class="row">
                                 <div class="col-2">
-                                    <a href="#" class="btn btn-primary">Details</a>
+                                    <a href="${url}${el.id}" class="btn btn-primary">Details</a>
                                 </div>
                                 <div class="col-2">
                                     <form class="like-dislike-forms" data-form-id="${el.id}">
@@ -148,12 +150,14 @@ postForm.addEventListener('submit', e=>{
             likeDislikePosts() 
             $('#addPostModal').modal('hide')
             handleAlerts('success', 'Post added!')
+            postForm.reset()
 
         },
         error:  function(error){
             console.log(error)
             $('#addPostModal').modal('hide')
             handleAlerts('danger', 'Post was not added')
+            postForm.reset()
         }
     })
 })
