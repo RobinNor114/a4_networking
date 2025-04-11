@@ -6,10 +6,11 @@ const loadBtn =  document.getElementById('load-btn')
 const endBox =  document.getElementById('end-box')
 const postForm =  document.getElementById('post-form')
 const title =  document.getElementById('id_title')
-const body =  document.getElementById('id-body')
+const body =  document.getElementById('id_body')
 const csrf =  document.getElementsByName('csrfmiddlewaretoken')
+const alertBox =  document.getElementById('alert-box')
 
-console.log('csrf', csf)
+console.log('csrf', csrf[0].value)
 
 const getCookie =(name) => {
     let cookieValue = null;
@@ -115,7 +116,45 @@ postForm.addEventListener('submit', e=>{
 
     $.ajax({
         type: 'POST',
-        url: ''
+        url: '',
+        data: {
+            'csrfmiddlewaretoken': csrf[0].value,
+            'title': title.value,
+            'body': body.value,
+        },
+        success: function(response){
+            console.log(response)
+            postsBox.insertAdjacentHTML('afterbegin', `
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">${response.title}</h5>
+                            <p class="card-text">${response.body}</p>
+                        </div>
+                        <div class="card-footer">
+                            <div class="row">
+                                <div class="col-2">
+                                    <a href="#" class="btn btn-primary">Details</a>
+                                </div>
+                                <div class="col-2">
+                                    <form class="like-dislike-forms" data-form-id="${response.id}">
+                                        <button href="#" class="btn btn-primary" id="like-dislike-${response.id}">Like (0)</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                `)
+            likeDislikePosts() 
+            $('#addPostModal').modal('hide')
+            handleAlerts('success', 'Post added!')
+
+        },
+        error:  function(error){
+            console.log(error)
+            $('#addPostModal').modal('hide')
+            handleAlerts('danger', 'Post was not added')
+        }
     })
 })
 
