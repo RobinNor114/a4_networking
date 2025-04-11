@@ -5,6 +5,7 @@ from .forms import PostForm
 from profiles.models import Profile
 from.utils import action_permission
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect
 
 # Create your views here.
 @login_required
@@ -75,6 +76,7 @@ def post_detail_data_view(request, pk):
     }
     return JsonResponse({'data': data})
 
+
 @login_required
 def like_dislike_post(request):
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
@@ -88,6 +90,7 @@ def like_dislike_post(request):
             liked = True
             obj.liked.add(request.user)
         return JsonResponse({'liked': liked, 'count': obj.like_count})
+    return redirect('posts:main-page')
     
 @login_required    
 @action_permission    
