@@ -31,6 +31,12 @@ const getCookie =(name) => {
 }
 const csrftoken = getCookie('csrftoken');
 
+const deleted = localStorage.getItem('title')
+if (deleted){
+    handleAlerts('danger', `Deleted "${deleted}"`)
+    localStorage.clear()
+}
+
 const likeDislikePosts = ()=> {
     const likeDislikeForms = [...document.getElementsByClassName('like-dislike-forms')]
     likeDislikeForms.forEach(form=> form.addEventListener('submit', e=>{
