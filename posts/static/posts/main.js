@@ -90,7 +90,7 @@ const getData = () => {
                                 </div>
                                 <div class="col-2">
                                     <form class="like-dislike-forms" data-form-id="${el.id}">
-                                        <button href="#" class="btn btn-primary" id="like-dislike-${el.id}">${el.liked ? `Dislike (${el.count})`: `Like (${el.count})`}</button>
+                                        <button  class="btn btn-primary" id="like-dislike-${el.id}">${el.liked ? `Dislike (${el.count})`: `Like (${el.count})`}</button>
                                     </form>
                                 </div>
                             </div>
@@ -121,6 +121,7 @@ loadBtn.addEventListener('click', ()=>{
     getData()
 })
 
+let newPostId = null
 postForm.addEventListener('submit', e=>{
     e.preventDefault()
 
@@ -134,6 +135,7 @@ postForm.addEventListener('submit', e=>{
         },
         success: function(response){
             console.log(response)
+            newPostId = response.id
             postsBox.insertAdjacentHTML('afterbegin', `
                     <div class="card mb-3">
                         <div class="card-body">
@@ -143,11 +145,11 @@ postForm.addEventListener('submit', e=>{
                         <div class="card-footer">
                             <div class="row">
                                 <div class="col-2">
-                                    <a href="#" class="btn btn-primary">Details</a>
+                                    <a href="${url}${response.id}" class="btn btn-primary">Details</a>
                                 </div>
                                 <div class="col-2">
                                     <form class="like-dislike-forms" data-form-id="${response.id}">
-                                        <button href="#" class="btn btn-primary" id="like-dislike-${response.id}">Like (0)</button>
+                                        <button class="btn btn-primary" id="like-dislike-${response.id}">Like (0)</button>
                                     </form>
                                 </div>
                             </div>
@@ -179,6 +181,22 @@ closeBtn.forEach(btn=> btn.addEventListener('click', ()=>{
     if (!dropzone.classList.contains('not-visible')) {
         dropzone.classList.add('not-visible')
     }
+    const myDropzone = Dropzone.forElement("#my-dropzone")
+    myDropzone.removeAllFiles(true)
 }))
+
+Dropzone.autoDiscover = false
+const myDropzone = new Dropzone('#my-dropzone', {
+    url: 'upload/',
+    init: function() {
+        this.on('sending', function(file,xhr,formData){
+            formData.append('csrfmiddlewaretoken', csrftoken)
+            formData.append('new_post_id', newPostId)
+        })
+    },
+    maxFiles: 3,
+    maxFileSize: 4,
+    acceptedFiles: '.png, .jpg, .jpeg'
+})
 
 getData()
